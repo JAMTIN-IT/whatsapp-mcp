@@ -165,6 +165,73 @@ By default, just the metadata of the media is stored in the local database. The 
 4. Data flows back through the chain to Claude
 5. When sending messages, the request flows from Claude through the MCP server to the Go bridge and to WhatsApp
 
+## Docker Support
+
+This project includes basic Docker configuration to containerize the application. The setup uses a multi-stage build to package both the Go WhatsApp Bridge and Python MCP Server in a single container.
+
+### Quick Start
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/lharries/whatsapp-mcp.git
+   cd whatsapp-mcp
+   ```
+
+2. Start the container:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. View logs:
+   ```bash
+   docker-compose logs -f
+   ```
+
+4. The MCP server will be available at `http://localhost:8000`
+
+### Configuration
+
+The following environment variables can be configured in the `docker-compose.yml` file:
+
+- `STORE_DIR`: Directory for persistent storage (default: `/app/store`)
+- `LOG_LEVEL`: Logging level (default: `INFO`)
+- `PYTHONUNBUFFERED`: Set to `1` for unbuffered Python output (recommended)
+
+### Data Persistence
+
+All WhatsApp data, including message history and media, is stored in a Docker volume named `whatsapp_store`. This ensures your data persists between container restarts.
+
+### Updating
+
+To update to the latest version:
+
+```bash
+docker-compose pull
+docker-compose up -d --force-recreate
+```
+
+### Troubleshooting
+
+- If you encounter permission issues, ensure the `./store` directory is writable by the container user (UID 1000 by default).
+- Check container logs with `docker-compose logs` for detailed error information.
+- If the container fails to start, verify that port 8000 is not in use by another application.
+
+## Key Changes in This Fork
+
+This fork includes the following modifications to the original repository:
+
+1. **Transport Protocol**
+   - Changed the transport protocol to SSE (Server-Sent Events)
+
+2. **Environment Variables**
+   - Updated volume mount paths to be more environment-friendly
+   - Made configuration paths configurable through environment variables
+
+3. **Docker Support**
+   - Added Dockerfile for containerization
+   - Included docker-compose.yml for simplified deployment
+   - Configured proper volume mounting for persistent storage
+
 ## Troubleshooting
 
 - If you encounter permission issues when running uv, you may need to add it to your PATH or use the full path to the executable.

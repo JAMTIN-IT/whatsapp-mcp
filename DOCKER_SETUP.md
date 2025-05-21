@@ -2,46 +2,6 @@
 
 This document outlines the Docker setup for the WhatsApp MCP Server, a forked version of the original project. It details the changes made to containerize the application and instructions for running it.
 
-## Fork-Specific Changes
-
-This is a fork of the original WhatsApp MCP Server with significant modifications to make it container-friendly and production-ready. Below are the key differences from the original source:
-
-### Go WhatsApp Bridge Changes
-1. **Environment-Based Configuration**
-   - Added support for environment variables (e.g., `STORE_DIR`)
-   - Modified database path to be configurable
-   - Added proper signal handling for graceful shutdown
-
-2. **Error Handling**
-   - Enhanced error handling for database operations
-   - Added retry logic for WhatsApp connection
-   - Improved logging with structured output
-
-3. **Security**
-   - Removed hardcoded credentials
-   - Added input validation for API endpoints
-   - Implemented proper file permissions
-
-4. **Docker-Specific**
-   - Modified file paths to work in containerized environment
-   - Added health check endpoints
-   - Configured proper user permissions
-
-### Python MCP Server Changes
-1. **Configuration**
-   - Made server host and port configurable via environment variables
-   - Added support for Docker secrets
-   - Implemented proper logging configuration
-
-2. **Error Handling**
-   - Added comprehensive error handling for WhatsApp API calls
-   - Implemented request timeouts
-   - Added input validation
-
-3. **Docker Integration**
-   - Modified file paths to use environment variables
-   - Added support for Docker health checks
-   - Configured proper signal handling for graceful shutdown
 
 ## Migration Guide from Original Version
 
@@ -151,24 +111,21 @@ The following changes were made to make the application Docker-ready:
      whatsapp-mcp
    ```
 
-## Configuration
+## Updating
 
-The following environment variables can be configured:
+To update to the latest version:
 
-- `STORE_DIR`: Directory for persistent storage (default: `/app/store`)
-- `LOG_LEVEL`: Logging level (default: `INFO`)
-- `PYTHONUNBUFFERED`: Set to `1` for unbuffered Python output (recommended)
+```bash
+docker-compose pull
+docker-compose up -d
+```
 
-## Volumes
+## Troubleshooting
 
-- `/app/store`: Contains persistent data including:
-  - WhatsApp session data
-  - Application database
-  - Any uploaded media
-
-## Network
-
-The container exposes port 8000 for the MCP server API.
+View container logs:
+```bash
+docker-compose logs -f
+```
 
 ## Health Checks
 
