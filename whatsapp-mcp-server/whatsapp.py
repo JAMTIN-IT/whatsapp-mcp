@@ -3,11 +3,14 @@ from datetime import datetime
 from dataclasses import dataclass
 from typing import Optional, List, Tuple
 import os.path
+import os
 import requests
 import json
 import audio
 
-MESSAGES_DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'whatsapp-bridge', 'store', 'messages.db')
+# Get store directory from environment variable or use default
+STORE_DIR = os.getenv('STORE_DIR', '/app/store')
+MESSAGES_DB_PATH = os.path.join(STORE_DIR, 'messages.db')
 WHATSAPP_API_BASE_URL = "http://localhost:8080/api"
 
 @dataclass

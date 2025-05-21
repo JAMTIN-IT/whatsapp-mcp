@@ -1,0 +1,26 @@
+
+services:
+  whatsapp_mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whatsapp-mcp-server
+    networks:
+      - automated_n8n_net
+    ports:
+      - "8000:8000"
+    volumes:
+      - whatsapp_store:/app/store
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+networks:
+  automated_n8n_net:
+    name: automated_n8n_local_network
+volumes:
+  whatsapp_store:
+    driver: local
